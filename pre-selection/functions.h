@@ -107,9 +107,6 @@ ROOT::VecOps::RVec<TLorentzVector> result;
 
    }
 
-float mt_2(float pt1, float phi1, float pt2, float phi2) {
-    return std::sqrt(2*pt1*pt2*(1-std::cos(phi1-phi2)));
-}
 
 double deltaPhi(float phi1, float phi2) {
     double result = phi1 - phi2;
@@ -124,21 +121,6 @@ double delR(const ROOT::Math::PtEtaPhiMVector particle1,const ROOT::Math::PtEtaP
     return sqrt(deta*deta + dphi*dphi);
 }
 
-double recoil(double m_sqrts, ROOT::Math::PtEtaPhiMVector v) {
-
-    ROOT::Math::PtEtaPhiMVector recoil_p4(0, 0, 0, m_sqrts);   
-    recoil_p4 -= v;
-  
-    return recoil_p4.M();
-}
-
-double sumScalar(ROOT::VecOps::RVec<double> s) {
-
-    double ret = 0;
-	for(unsigned int i = 0; i < s.size(); ++i) ret += s[i];
-  
-    return ret;
-}
 
 ROOT::Math::PtEtaPhiMVector sumP4(ROOT::VecOps::RVec<double> pt, ROOT::VecOps::RVec<double> eta, ROOT::VecOps::RVec<double> phi, ROOT::VecOps::RVec<double> m) {
 
@@ -152,54 +134,6 @@ ROOT::Math::PtEtaPhiMVector sumP4(ROOT::VecOps::RVec<double> pt, ROOT::VecOps::R
     return ret;
 }
 
-TLorentzVector sumP4_2(ROOT::VecOps::RVec<double> pt, ROOT::VecOps::RVec<double> eta, ROOT::VecOps::RVec<double> phi, double Mass) {
 
-    TLorentzVector ret;
-	for(unsigned int i = 0; i < pt.size(); ++i) {
-        
-        TLorentzVector tlv(pt[i], eta[i], phi[i], Mass);
-        ret += tlv;
-    }
-  
-    return ret;
-}
-
-
-ROOT::VecOps::RVec<double> computeEnergy(ROOT::VecOps::RVec<double> pt, ROOT::VecOps::RVec<double> eta, ROOT::VecOps::RVec<double> phi, ROOT::VecOps::RVec<double> m) {
-
-    ROOT::VecOps::RVec<double> ret;
-	for(unsigned int i = 0; i < pt.size(); ++i) {
-        
-        ROOT::Math::PtEtaPhiMVector v(pt[i], eta[i], phi[i], m[i]);
-        ret.push_back(v.E());
-    }
-  
-    return ret;
-}
-
-ROOT::VecOps::RVec<double> computeMass(ROOT::VecOps::RVec<double> pt, ROOT::VecOps::RVec<double> eta, ROOT::VecOps::RVec<double> phi, ROOT::VecOps::RVec<double> m) {
-
-    ROOT::VecOps::RVec<double> ret;
-	for(unsigned int i = 0; i < pt.size(); ++i) {
-        
-        ROOT::Math::PtEtaPhiMVector v(pt[i], eta[i], phi[i], m[i]);
-        ret.push_back(v.M());
-    }
-  
-    return ret;
-}
-
-
-// function to compute Energy (.E) from TClonesArray
-ROOT::VecOps::RVec<double> convertEnergy(TClonesArray pt) {
-
-    ROOT::VecOps::RVec<double> ret;
-    
-    for(int i=0; i<pt.GetEntries(); i++) {
-        Tower *tt = (Tower*)pt.At(i);
-        ret.push_back(tt->E);
-    }
-    return ret;
-}
 
 #endif
